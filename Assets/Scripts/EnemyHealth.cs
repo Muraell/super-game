@@ -14,15 +14,5 @@ public class EnemyHealth : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        else
-        {
-            animator.SetTrigger("hit");
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
