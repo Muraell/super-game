@@ -7,9 +7,11 @@ public class MOBAI : MonoBehaviour
     public float viewAngle;
     public List<Transform> patrolPoints;
     public PlayerController player;
+    public float damage = 30;
 
     private NavMeshAgent _navMeshAgent;
     private bool _isPlayerNoticed;
+    private PlayerHealth _playerHealth;
     void Start()
     {
         InitComponentLinks();
@@ -19,6 +21,7 @@ public class MOBAI : MonoBehaviour
     private void InitComponentLinks()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
+        _playerHealth = player.GetComponent<PlayerHealth>();
     }
 
     // Update is called once per frame
@@ -27,7 +30,19 @@ public class MOBAI : MonoBehaviour
         NoticePlayerUpdate();
         ChaseUpdate();
         PatrolUpdate();
+        AttackUpdate();
 
+    }
+
+    private void AttackUpdate()
+    {
+        if(_isPlayerNoticed)
+        {
+            if(_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
+            {
+               _playerHealth.DealDamage(damage * Time.deltaTime);
+            }
+        }
     }
 
     private void NoticePlayerUpdate()
@@ -51,7 +66,7 @@ public class MOBAI : MonoBehaviour
     {
         if (!_isPlayerNoticed)
         {
-            if (_navMeshAgent.remainingDistance == 0)
+            if (_navMeshAgent.remainingDistance <= _navMeshAgent.stoppingDistance)
             {
                 PickNewPatrolPoint();
             }
